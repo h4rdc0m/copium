@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(CopiumLang
-    VERSION 0.0.1
-    DESCRIPTION "A simple programming language"
-    LANGUAGES CXX)
+project(
+  CopiumLang
+  VERSION 0.0.1
+  DESCRIPTION "A simple programming language"
+  LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -22,29 +23,34 @@ set(LLVM_INCLUDE_EXAMPLES OFF)
 set(LLVM_INCLUDE_BENCHMARKS OFF)
 set(LLVM_ENABLE_DUMP ON)
 FetchContent_Declare(
-    llvm
-    GIT_REPOSITORY https://github.com/llvm/llvm-project.git
-    GIT_TAG llvmorg-20.1.5
-    GIT_SHALLOW ON
-    SOURCE_SUBDIR llvm
-)
+  llvm
+  GIT_REPOSITORY https://github.com/llvm/llvm-project.git
+  GIT_TAG llvmorg-20.1.5
+  GIT_SHALLOW ON
+  SOURCE_SUBDIR llvm)
 FetchContent_MakeAvailable(llvm)
 
-add_executable(copium
-    src/main.cpp
-    src/Lexer.hpp
-    src/Lexer.cpp
-)
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG v1.17.0
+  GIT_SHALLOW ON)
 
-target_link_libraries(copium PRIVATE
-    LLVMCore
-    LLVMSupport
-    LLVMMC
-    LLVMIRReader
-)
+# For Windows: Prevent overriding the parent project's compiler/linker
+set(gtest_force_shared_crt
+    ON
+    CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+include(CTest)
+enable_testing()
+
+add_executable(copium src/main.cpp src/Lexer.hpp src/Lexer.cpp)
+
+target_link_libraries(copium PRIVATE LLVMCore LLVMSupport LLVMMC LLVMIRReader)
 
 # Include LLVM headers
-target_include_directories(copium PRIVATE
-    ${llvm_SOURCE_DIR}/include
-    ${llvm_BINARY_DIR}/include
-)
+target_include_directories(copium PRIVATE ${llvm_SOURCE_DIR}/include
+                                          ${llvm_BINARY_DIR}/include)
+
+add_subdirectory(tests)

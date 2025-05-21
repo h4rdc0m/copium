@@ -45,17 +45,19 @@ FetchContent_MakeAvailable(googletest)
 # Documentation generation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    add_custom_target(docs
-        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen.config
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Generating API documentation with Doxygen" VERBATIM
-    )
+  add_custom_target(
+    docs
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen.config
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating API documentation with Doxygen"
+    VERBATIM)
 endif()
 
 include(CTest)
 enable_testing()
 
-add_executable(copium src/main.cpp src/Lexer.hpp src/Lexer.cpp)
+add_executable(copium src/main.cpp src/lexer/token_type.hpp src/lexer/token.hpp
+                      src/lexer/token.cpp)
 
 target_link_libraries(copium PRIVATE LLVMCore LLVMSupport LLVMMC LLVMIRReader)
 

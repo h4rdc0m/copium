@@ -11,7 +11,7 @@
 - [x] Set up CI/CD pipeline
 - [x] Configure testing framework
 - [x] Establish coding standards and documentation requirements
-- [ ] Create project roadmap with milestones
+- [x] Create project roadmap with milestones
 
 ### Lexer Implementation
 - [ ] Implement tokenization for basic keywords and literals

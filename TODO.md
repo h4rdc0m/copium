@@ -9,8 +9,8 @@
 
 ### Development Infrastructure
 - [x] Set up CI/CD pipeline
-- [ ] Configure testing framework
-- [ ] Establish coding standards and documentation requirements
+- [x] Configure testing framework
+- [x] Establish coding standards and documentation requirements
 - [ ] Create project roadmap with milestones
 
 ### Lexer Implementation

@@ -20,15 +20,6 @@ Copium is a modern programming language inspired by the [Carbon Language](https:
 - `tests/` — Test cases and language samples.
 - `docs/` — Documentation and specifications.
 
-## TODO
-
-- [ ] Implement full parser for Copium syntax.
-- [ ] Integrate semantic analysis based on Carbon spec.
-- [ ] Complete LLVM IR code generation.
-- [ ] Add standard library support.
-- [ ] Expand test suite.
-- [ ] Write user and developer documentation.
-
 ---
 
-Contributions are welcome! See `CONTRIBUTING.md` for guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

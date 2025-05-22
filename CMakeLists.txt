@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(
-  CopiumLang
-  VERSION 0.0.1
-  DESCRIPTION "A simple programming language"
-  LANGUAGES C CXX)
+        CopiumLang
+        VERSION 0.0.1
+        DESCRIPTION "A simple programming language"
+        LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -22,37 +22,42 @@ set(LLVM_INCLUDE_TESTS OFF)
 set(LLVM_INCLUDE_EXAMPLES OFF)
 set(LLVM_INCLUDE_BENCHMARKS OFF)
 set(LLVM_ENABLE_DUMP ON)
-FetchContent_Declare(
-        llvm
-        URL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/llvm-20.1.5.src.tar.xz
-        SOURCE_SUBDIR llvm
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
-FetchContent_MakeAvailable(llvm)
-find_package(LLVM REQUIRED CONFIG)
+
+if (NOT DEFINED ENV{LLVM_DIR})
+    FetchContent_Declare(
+            llvm
+            URL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/llvm-20.1.5.src.tar.xz
+            SOURCE_SUBDIR llvm
+            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(llvm)
+else ()
+    find_package(LLVM REQUIRED CONFIG)
+endif ()
+
 
 FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG v1.17.0
-  GIT_SHALLOW ON)
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0
+        GIT_SHALLOW ON)
 
 # For Windows: Prevent overriding the parent project's compiler/linker
 set(gtest_force_shared_crt
-    ON
-    CACHE BOOL "" FORCE)
+        ON
+        CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Documentation generation with Doxygen
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
-  add_custom_target(
-    docs
-    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen.config
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-    VERBATIM)
-endif()
+if (DOXYGEN_FOUND)
+    add_custom_target(
+            docs
+            ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/doxygen.config
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM)
+endif ()
 
 include(CTest)
 enable_testing()

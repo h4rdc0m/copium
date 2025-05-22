@@ -18,16 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Cache LLVM
-        id: cache-llvm
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{github.workspace}}/build/_deps/llvm-src
-            ${{github.workspace}}/build/_deps/llvm-build
-          key: ${{ runner.os }}-llvm-20.1.5-${{ hashFiles('CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-llvm-20.1.5-
+      - name: Install LLVM (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y llvm
+          echo "LLVM_DIR=$(llvm-config --cmakedir)" >> $GITHUB_ENV
 
       - name: Install LLVM (macOS)
         if: runner.os == 'macOS'

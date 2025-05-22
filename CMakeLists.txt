@@ -23,11 +23,11 @@ set(LLVM_INCLUDE_EXAMPLES OFF)
 set(LLVM_INCLUDE_BENCHMARKS OFF)
 set(LLVM_ENABLE_DUMP ON)
 FetchContent_Declare(
-  llvm
-  GIT_REPOSITORY https://github.com/llvm/llvm-project.git
-  GIT_TAG llvmorg-20.1.5
-  GIT_SHALLOW ON
-  SOURCE_SUBDIR llvm)
+        llvm
+        URL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/llvm-20.1.5.src.tar.xz
+        SOURCE_SUBDIR llvm
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
 FetchContent_MakeAvailable(llvm)
 
 FetchContent_Declare(

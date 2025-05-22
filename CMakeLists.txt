@@ -29,6 +29,7 @@ FetchContent_Declare(
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(llvm)
+find_package(LLVM REQUIRED CONFIG)
 
 FetchContent_Declare(
   googletest
@@ -61,7 +62,6 @@ add_executable(copium src/main.cpp src/token.cpp src/lexer.cpp)
 target_link_libraries(copium PRIVATE LLVMCore LLVMSupport LLVMMC LLVMIRReader)
 
 # Include LLVM headers
-target_include_directories(copium PRIVATE ${llvm_SOURCE_DIR}/include
-                                          ${llvm_BINARY_DIR}/include)
+target_include_directories(copium PRIVATE ${LLVM_INCLUDE_DIRS})
 
 add_subdirectory(tests)

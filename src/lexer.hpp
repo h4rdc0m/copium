@@ -34,7 +34,7 @@ public:
   /**
    * @brief Scans all tokens from the source code.
    *
-   * @return A vector of all tokensin the source code
+   * @return A vector of all tokens in the source code
    */
   std::vector<Token> scanTokens();
 

@@ -37,8 +37,6 @@ enum class TokenType {
   EXPORT,
   MODULE,
   PUB,
-  TRUE,
-  FALSE,
   NULL_KEYWORD,
   ASYNC,
   AWAIT,

@@ -90,7 +90,7 @@ TEST(LexerTest, Comments) {
   Lexer lexer("// This is a comment\nx // Another comment\n/* Multi-line\ncomment */y");
   auto tokens = lexer.scanTokens();
   for(auto t : tokens) {
-    std::cout << t.toString() << "," << std::endl;
+    // Debugging output removed to keep test output clean.
   }
   
   ASSERT_EQ(tokens.size(), 3); // x, y, and EOF

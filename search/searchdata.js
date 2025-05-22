@@ -1,0 +1,33 @@
+var indexSectionsWithContent =
+{
+  0: "abcdefghilmnoprstvw",
+  1: "lt",
+  2: "c",
+  3: "lmt",
+  4: "ghlmst",
+  5: "t",
+  6: "abcdefgilmnoprsvw"
+};
+
+var indexSectionNames =
+{
+  0: "all",
+  1: "classes",
+  2: "namespaces",
+  3: "files",
+  4: "functions",
+  5: "enums",
+  6: "enumvalues"
+};
+
+var indexSectionLabels =
+{
+  0: "All",
+  1: "Classes",
+  2: "Namespaces",
+  3: "Files",
+  4: "Functions",
+  5: "Enumerations",
+  6: "Enumerator"
+};
+

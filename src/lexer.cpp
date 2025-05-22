@@ -20,9 +20,9 @@ std::unordered_map<std::string, TokenType> Lexer::keywords = {{"fn", TokenType::
                                                               {"export", TokenType::EXPORT},
                                                               {"module", TokenType::MODULE},
                                                               {"pub", TokenType::PUB},
-                                                              {"true", TokenType::TRUE},
-                                                              {"false", TokenType::FALSE},
-                                                              {"null", TokenType::NULL_KEYWORD},
+                                                              {"true", TokenType::BOOLEAN_LITERAL},
+                                                              {"false", TokenType::BOOLEAN_LITERAL},
+                                                              {"null", TokenType::NULL_LITERAL},
                                                               {"async", TokenType::ASYNC},
                                                               {"await", TokenType::AWAIT}};
 
@@ -39,19 +39,22 @@ std::vector<Token> Lexer::scanTokens() {
   }
 
   // Add the end of file token
-  tokens.emplace_back(TokenType::END_OF_FILE, "", line, column);
+  tokens.emplace_back(TokenType::END_OF_FILE, "", line, 1);  // Use column 1 for EOF token
   return tokens;
 }
 
 Token Lexer::scanToken() {
   skipWhitespace();
-
+  
   start = current;
-
+  
   if (isAtEnd()) {
     return Token(TokenType::END_OF_FILE, "", line, column);
   }
-
+  
+  // Store the starting column position for this token
+  int startColumn = column;
+  
   char c = advance();
 
   // Handle identifiers
@@ -67,7 +70,7 @@ Token Lexer::scanToken() {
       type = it->second;
     }
 
-    return Token(type, text, line, column);
+    return Token(type, text, line, startColumn);
   }
 
   // Handle numbers
@@ -76,125 +79,121 @@ Token Lexer::scanToken() {
     std::string text = source.substr(start, current - start);
     TokenType type =
         text.find('.') != std::string::npos ? TokenType::FLOAT_LITERAL : TokenType::INTEGER_LITERAL;
-    return Token(type, text, line, column);
+    return Token(type, text, line, startColumn);  // Use startColumn instead of column
   }
 
   // Handle single-character tokens
   switch (c) {
     case '(':
-      return Token(TokenType::LEFT_PAREN, "(", line, column - 1);
+      return Token(TokenType::LEFT_PAREN, "(", line, startColumn);
     case ')':
-      return Token(TokenType::RIGHT_PAREN, ")", line, column - 1);
+      return Token(TokenType::RIGHT_PAREN, ")", line, startColumn);
     case '{':
-      return Token(TokenType::LEFT_BRACE, "{", line, column - 1);
+      return Token(TokenType::LEFT_BRACE, "{", line, startColumn);
     case '}':
-      return Token(TokenType::RIGHT_BRACE, "}", line, column - 1);
+      return Token(TokenType::RIGHT_BRACE, "}", line, startColumn);
     case '[':
-      return Token(TokenType::LEFT_BRACKET, "[", line, column - 1);
+      return Token(TokenType::LEFT_BRACKET, "[", line, startColumn);
     case ']':
-      return Token(TokenType::RIGHT_BRACKET, "]", line, column - 1);
+      return Token(TokenType::RIGHT_BRACKET, "]", line, startColumn);
     case '.':
-      return Token(TokenType::DOT, ".", line, column - 1);
+      return Token(TokenType::DOT, ".", line, startColumn);
     case ',':
-      return Token(TokenType::COMMA, ",", line, column - 1);
+      return Token(TokenType::COMMA, ",", line, startColumn);
     case ';':
-      return Token(TokenType::SEMICOLON, ";", line, column - 1);
+      return Token(TokenType::SEMICOLON, ";", line, startColumn);
     case '%':
-      return Token(TokenType::PERCENT, "%", line, column - 1);
+      return Token(TokenType::PERCENT, "%", line, startColumn);
 
     // Handle two-character tokens
     case '!':
       if (match('=')) {
-        return Token(TokenType::NOT_EQUAL, "!=", line, column - 2);
+        return Token(TokenType::NOT_EQUAL, "!=", line, startColumn);
       }
-      return Token(TokenType::NOT, "!", line, column - 1);
+      return Token(TokenType::NOT, "!", line, startColumn);
     case '=':
       if (match('=')) {
-        return Token(TokenType::EQUAL_EQUAL, "==", line, column - 2);
+        return Token(TokenType::EQUAL_EQUAL, "==", line, startColumn);
       }
-      return Token(TokenType::EQUAL, "=", line, column - 1);
+      return Token(TokenType::EQUAL, "=", line, startColumn);
     case '<':
       if (match('=')) {
-        return Token(TokenType::LESS_EQUAL, "<=", line, column - 2);
+        return Token(TokenType::LESS_EQUAL, "<=", line, startColumn);
       }
-      return Token(TokenType::LESS, "<", line, column - 1);
+      return Token(TokenType::LESS, "<", line, startColumn);
     case '>':
       if (match('=')) {
-        return Token(TokenType::GREATER_EQUAL, ">=", line, column - 2);
+        return Token(TokenType::GREATER_EQUAL, ">=", line, startColumn);
       }
-      return Token(TokenType::GREATER, ">", line, column - 1);
+      return Token(TokenType::GREATER, ">", line, startColumn);
     case '+':
       if (match('=')) {
-        return Token(TokenType::PLUS_EQUAL, "+=", line, column - 2);
+        return Token(TokenType::PLUS_EQUAL, "+=", line, startColumn);
       }
-      return Token(TokenType::PLUS, "+", line, column - 1);
+      return Token(TokenType::PLUS, "+", line, startColumn);
     case '-':
       if (match('>')) {
-        return Token(TokenType::ARROW, "->", line, column - 2);
+        return Token(TokenType::ARROW, "->", line, startColumn);
       }
       if (match('=')) {
-        return Token(TokenType::MINUS_EQUAL, "-=", line, column - 2);
+        return Token(TokenType::MINUS_EQUAL, "-=", line, startColumn);
       }
-      return Token(TokenType::MINUS, "-", line, column - 1);
+      return Token(TokenType::MINUS, "-", line, startColumn);
     case '*':
       if (match('=')) {
-        return Token(TokenType::STAR_EQUAL, "*=", line, column - 2);
+        return Token(TokenType::STAR_EQUAL, "*=", line, startColumn);
       }
-      return Token(TokenType::STAR, "*", line, column - 1);
+      return Token(TokenType::STAR, "*", line, startColumn);
     case '/':
       if (match('/')) {
         // A comment goes until the end of the line
-        char t = peek();
-        while (t != '\n' && !isAtEnd()) {
+        while (peek() != '\n' && !isAtEnd()) {
           advance();
         }
-        return scanToken();  // Skip the comment
+        return scanToken();  // Skip the comment and get the next token
       }
       if (match('*')) {
         // Handle multi-line comment
         skipComment();
-        return scanToken();  // Skip the comment
+        return scanToken();  // Skip the comment and get the next token
       }
       if (match('=')) {
-        return Token(TokenType::SLASH_EQUAL, "/=", line, column - 2);
+        return Token(TokenType::SLASH_EQUAL, "/=", line, startColumn);
       }
-      return Token(TokenType::SLASH, "/", line, column - 1);
+      return Token(TokenType::SLASH, "/", line, startColumn);
     case '&':
       if (match('&')) {
-        return Token(TokenType::AND, "&&", line, column - 2);
+        return Token(TokenType::AND, "&&", line, startColumn);
       }
       errorToken("Unexpected character: '&', did you mean '&&'?");
-      return Token(TokenType::ERROR, "&", line, column - 1);
+      return Token(TokenType::ERROR, "&", line, startColumn);
     case '|':
       if (match('|')) {
-        return Token(TokenType::OR, "||", line, column - 2);
+        return Token(TokenType::OR, "||", line, startColumn);
       }
       errorToken("Unexpected character: '|', did you mean '||'?");
-      return Token(TokenType::ERROR, "|", line, column - 1);
+      return Token(TokenType::ERROR, "|", line, startColumn);
     case ':':
       if (match(':')) {
-        return Token(TokenType::COLON_COLON, "::", line, column - 2);
+        return Token(TokenType::COLON_COLON, "::", line, startColumn);
       }
-      return Token(TokenType::COLON, ":", line, column - 1);
+      return Token(TokenType::COLON, ":", line, startColumn);
     case '"':
       scanString();
       if (isAtEnd() || peek() != '"') {
         errorToken("Unterminated string.");
-        return Token(TokenType::ERROR,
-                     source.substr(start, current - start),
-                     line,
-                     column - (current - start));
+        return Token(TokenType::ERROR, source.substr(start, current - start), line, startColumn);
       }
       // Consume the closing quote
       advance();
       return Token(TokenType::STRING_LITERAL,
                    source.substr(start + 1, current - start - 2),
                    line,
-                   column - (current - start));
+                   startColumn);
     default:
       // Handle unexpected characters
       errorToken("Unexpected character: '" + std::string(1, c) + "'");
-      return Token(TokenType::ERROR, std::string(1, c), line, column - 1);
+      return Token(TokenType::ERROR, std::string(1, c), line, startColumn);
   }
 }
 
@@ -278,7 +277,7 @@ void Lexer::skipWhitespace() {
         break;
       case '\n':
         line++;
-        column = 1;
+        column = 0;  // <-- Fix: set to 0 so advance() sets it to 1
         advance();
         break;
       default:
@@ -286,29 +285,28 @@ void Lexer::skipWhitespace() {
     }
   }
 }
-
 void Lexer::skipComment() {
-    int nesting = 1;
-    while(nesting > 0 && !isAtEnd()) {
-        if (peek() == '*' && peekNext() == '/') {
-            advance(); // Consume '*'
-            advance(); // Consume '/'
-            nesting--;
-        } else if (peek() == '/' && peekNext() == '*') {
-            advance(); // Consume '/'
-            advance(); // Consume '*'
-            nesting++;
-        } else if (peek() == '\n') {
-            line++;
-            column = 1;
-            advance();
-        } else {
-            advance();
-        }
+  int nesting = 1;
+  while (nesting > 0 && !isAtEnd()) {
+    if (peek() == '*' && peekNext() == '/') {
+      advance();  // Consume '*'
+      advance();  // Consume '/'
+      nesting--;
+    } else if (peek() == '/' && peekNext() == '*') {
+      advance();  // Consume '/'
+      advance();  // Consume '*'
+      nesting++;
+    } else if (peek() == '\n') {
+      line++;
+      column = 1;
+      advance();
+    } else {
+      advance();
     }
+  }
 
-    if(nesting > 0) {
-        errorToken("Unterminated multi-line comment.");
-    }
+  if (nesting > 0) {
+    errorToken("Unterminated multi-line comment.");
+  }
 }
 }  // namespace copium

@@ -22,19 +22,13 @@ set(LLVM_INCLUDE_TESTS OFF)
 set(LLVM_INCLUDE_EXAMPLES OFF)
 set(LLVM_INCLUDE_BENCHMARKS OFF)
 set(LLVM_ENABLE_DUMP ON)
-
-if (NOT DEFINED ENV{LLVM_DIR})
-    FetchContent_Declare(
-            llvm
-            URL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/llvm-20.1.5.src.tar.xz
-            SOURCE_SUBDIR llvm
-            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-    )
-    FetchContent_MakeAvailable(llvm)
-else ()
-    find_package(LLVM REQUIRED CONFIG)
-endif ()
-
+FetchContent_Declare(
+        llvm
+        URL https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.5/llvm-20.1.5.src.tar.xz
+        SOURCE_SUBDIR llvm
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(llvm)
 
 FetchContent_Declare(
         googletest

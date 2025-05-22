@@ -9,15 +9,15 @@
 
 ### Development Infrastructure
 - [x] Set up CI/CD pipeline
-- [ ] Configure testing framework
-- [ ] Establish coding standards and documentation requirements
-- [ ] Create project roadmap with milestones
+- [x] Configure testing framework
+- [x] Establish coding standards and documentation requirements
+- [x] Create project roadmap with milestones
 
 ### Lexer Implementation
-- [ ] Implement tokenization for basic keywords and literals
-- [ ] Support Carbon's lexical structure (identifiers, comments, etc.)
-- [ ] Add Copium-specific token types and extensions
-- [ ] Write comprehensive tests for lexer
+- [x] Implement tokenization for basic keywords and literals
+- [x] Support Carbon's lexical structure (identifiers, comments, etc.)
+- [x] Add Copium-specific token types and extensions
+- [x] Write comprehensive tests for lexer
 
 ### Parser Implementation
 - [ ] Design AST (Abstract Syntax Tree) structure

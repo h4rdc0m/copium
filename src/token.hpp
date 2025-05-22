@@ -32,7 +32,7 @@ public:
   /**
    * @brief Returns the string representation of the token type.
    * 
-   * @packaged type The type of the token
+   * @param type The type of the token
    * @return The string representation of the token type
    */
   [[nodiscard]] static std::string typeToString(TokenType type);

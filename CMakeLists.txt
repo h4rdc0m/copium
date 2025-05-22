@@ -56,9 +56,7 @@ endif()
 include(CTest)
 enable_testing()
 
-add_executable(copium src/main.cpp src/token_type.hpp src/token.hpp
-                      src/token.cpp
-                      src/lexer.hpp src/lexer.cpp)
+add_executable(copium src/main.cpp src/token.cpp src/lexer.cpp)
 
 target_link_libraries(copium PRIVATE LLVMCore LLVMSupport LLVMMC LLVMIRReader)
 

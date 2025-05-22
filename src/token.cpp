@@ -59,10 +59,6 @@ std::string Token::typeToString(TokenType type) {
       return "MODULE";
     case TokenType::PUB:
       return "PUB";
-    case TokenType::TRUE:
-      return "TRUE";
-    case TokenType::FALSE:
-      return "FALSE";
     case TokenType::NULL_KEYWORD:
       return "NULL";
     case TokenType::ASYNC:

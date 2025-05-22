@@ -1,5 +1,5 @@
 add_executable(
-  lexer_tests lexer/LexerTests.cpp ${CMAKE_SOURCE_DIR}/src/Token.cpp
+  lexer_tests lexer/LexerTests.cpp ${CMAKE_SOURCE_DIR}/src/token.cpp
               ${CMAKE_SOURCE_DIR}/src/Lexer.cpp)
 
 target_link_libraries(lexer_tests PRIVATE gtest gtest_main LLVMCore LLVMSupport)

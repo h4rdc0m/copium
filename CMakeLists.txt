@@ -13,7 +13,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(FetchContent)
 # Configure LLVM options before fetching
 set(LLVM_ENABLE_PROJECTS "")
-set(LLVM_TARGETS_TO_BUILD "X86")
 set(LLVM_ENABLE_RTTI ON)
 set(LLVM_ENABLE_EH ON)
 set(LLVM_BUILD_TOOLS OFF)
@@ -58,9 +57,10 @@ enable_testing()
 
 add_executable(copium src/main.cpp src/token.cpp src/lexer.cpp)
 
-target_link_libraries(copium PRIVATE LLVMCore LLVMSupport LLVMMC LLVMIRReader)
+target_link_libraries(copium PRIVATE ${LLVM_LIBS})
 
-# Include LLVM headers
+# Include LLVM headers and definitions
 target_include_directories(copium PRIVATE ${LLVM_INCLUDE_DIRS})
+target_compile_definitions(copium PRIVATE ${LLVM_DEFINITIONS})
 
 add_subdirectory(tests)

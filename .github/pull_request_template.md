@@ -1,4 +1,3 @@
-\hardc\source\repos\copium\.github\pull_request_template.md
 ## Description
 
 <!-- Describe the changes you've made -->

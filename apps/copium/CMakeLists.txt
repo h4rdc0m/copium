@@ -1,0 +1,10 @@
+add_executable(copium src/main.cpp)
+
+set(COPIUM_VERSION_MAJOR 0)
+set(COPIUM_VERSION_MINOR 0)
+set(COPIUM_VERSION_PATCH 1)
+set(COPIUM_VERSION "${COPIUM_VERSION_MAJOR}.${COPIUM_VERSION_MINOR}.${COPIUM_VERSION_PATCH}")
+
+target_compile_definitions(copium PRIVATE
+    COPIUM_VERSION="${COPIUM_VERSION}"
+)

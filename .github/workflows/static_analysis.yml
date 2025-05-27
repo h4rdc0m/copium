@@ -1,0 +1,23 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install clang-tidy
+      run: sudo apt-get install -y clang-tidy
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+
+    - name: Run clang-tidy
+      run: |
+        find src -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy -p ${{github.workspace}}/build

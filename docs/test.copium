@@ -1,0 +1,78 @@
+module main; # Top level module declaration
+
+# This is a comment
+# By default everything is private for the module, except when the `pub` keyword is used
+# All declarations are hoisted to the top so no need to define in order
+
+## This is a docblock comment
+## @param i64 count the count parameter
+## @returns i64 the return value
+fun testFunction(count: i64) -> i64 {
+    count += 1; # Add one to count
+
+    # Last statement without ; returns the value automatically, otherwise use return statement.
+    count
+}
+
+pub data DataObject {
+    fValue: f64; # Floating point member value
+    iValue: i64; # Integer member value
+    uValue: u64; # Unsigned integer value
+    bValue: bool; # Boolean value
+}
+
+## Adds valueToAdd to the fValue member of DataObject instance
+## The methos is private to the module.
+## @param do A pointer to the DataObject instance
+## @param valueToAdd The value to add to fValue
+##
+## @example var do = DataObject{0.0, 0, 0, false}; do.AddToFValue(1.0); do.fValue == 1.0;
+fun AddToFValue(do: *DataObject, valueToAdd: f64) -> void {
+    do.fValue += valueToAdd;
+}
+
+## Increments FValue by 1.0, implicitely returns `void`.
+## The method is public, and can be called from outside of the module.
+## @param do A pointer to the DataObject instance
+pub fun IncFValue(do: *DataObject) {
+    do.fValue += 1.0;
+}
+
+pub data Result<Err, Ok> {
+    Ok: Ok;    # Success case, holds a value of type Ok
+    Err: Err;  # Error case, holds a value of type Err
+}
+
+fun main() -> Result<_, i64> {
+    var do = DataObject { 
+        .fValue = 0.0, 
+        .uValue = 0, 
+        .iValue = 0, 
+        .bValue =false 
+    };
+
+    var dos: DataObject[];
+    dos[] = do; # Appends a DataObject to the array
+
+    for *d in dos {
+        # do something with the do reference
+        # The method could also be called like this: IncValue(d); 
+        d.IncFValue();
+    }
+
+    for i: i64 = 0; i < dos.size(); i += 1 {
+        # index access of arrays does bounds checking by default!
+        *dos[i].uValue += 1; # Modify member value in place
+    }
+
+    for d in dos {
+        # do something with the copy of the item
+        if d.fValue > 0.0 && d.uValue > 0 {
+            break;
+        }
+
+        if d.fValue == 0.0 || d.iValue == 0 {
+            break;
+        }
+    }
+}

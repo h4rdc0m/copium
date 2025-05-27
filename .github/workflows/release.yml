@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: copium-linux
+            asset_name: copium-linux
+          - os: windows-latest
+            artifact_name: copium.exe
+            asset_name: copium-windows.exe
+          - os: macos-latest
+            artifact_name: copium-macos
+            asset_name: copium-macos
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release
+
+    - name: Upload Release Asset
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.asset_name }}
+        path: ${{github.workspace}}/build/${{ matrix.artifact_name }}
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          copium-linux/*
+          copium-windows.exe/*
+          copium-macos/*
+        draft: true
